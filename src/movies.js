@@ -18,6 +18,7 @@ function howManyMovies(moviesArray, item) {
    })
    return counter };
  
+ 
 
 // Iteration 3: All scores average - Get the average of all scores with 2 decimals
 function scoresAverage(movies2) {
@@ -49,15 +50,16 @@ const averageDrama2 = averageDrama/ moviesAr.genre.length;
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
 function orderByYear(moviesArray) {
- const copiedArray = [...movies];
+ const copiedArray = [...moviesArray];
  copiedArray.sort((a, b) => {
+   if (a.year === b.year){
+     return a.title.localeCompare(b.title)
+   }
 return a.year - b.year;
 });
 return copiedArray
 };
-//const sortedYear= movies.sort((a, b) => a.year - b.year);
 
-//return sortedYear;
 
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
