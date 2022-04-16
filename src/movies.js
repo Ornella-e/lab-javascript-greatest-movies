@@ -11,12 +11,14 @@ const allDirectors = moviesArray1.map ((el)  => {
 return allDirectors};
 
 // Iteration 2: Steven Spielberg. The best? - How many drama movies did STEVEN SPIELBERG direct?
-function howManyMovies(moviesArray, item) {
-  let counter = 1;
-   moviesArray.forEach (x =>{
-     if (x === "Steven Spielberg") counter ++
-   })
-   return counter };
+function howManyMovies(moviesArray){
+  filteredMovies= movies.filter(function(eachMovie){
+    if (eachMovie.director==='Steven Spielberg' && 
+    eachMovie.genre.includes('Drama')){
+      return true}
+    });
+    return filteredMovies.length
+   };
  
  
 
@@ -26,7 +28,12 @@ function scoresAverage(movies2) {
     return 0;
   }
 const average = movies2.reduce ((acc, val) => {
-return acc + val.score;},0);
+  if (val.score){
+  return acc + val.score;}
+  else{
+    return acc;
+  }
+},0);
 const av2 = average/ movies2.length;
   return Number(av2.toFixed(2))
 };
@@ -36,17 +43,11 @@ const av2 = average/ movies2.length;
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesAr) {
-const averageDrama = moviesAr.reduce ((acc, val) => {
-return acc + val.genre;},0);
-const averageDrama2 = averageDrama/ moviesAr.genre.length;
-  return averageDrama2.toFixed(2)
-};
-//if (genre === "Drama"){
-  //return moviesAr.genre;}
-  //const averageMovies = moviesAr.reduce ((acc, val) => {
-    //return acc + val.genre.includes("Drama");},0) / moviesAr.length;
-    //return averageMovies;
-//}
+  let dramaMovie = movies.filter(function(eachMovie){
+    return eachMovie.genre.includes('Drama')
+  });
+  return scoresAverage(dramaMovie);
+}
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
 function orderByYear(moviesArray) {
@@ -64,19 +65,71 @@ return copiedArray
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
 function orderAlphabetically(movies) {
- const sortedMovies= movies.sort(title => {
-return movies.title;   
- });
+  const moviesArr=JSON.parse(JSON.stringify(movies));
+sortedMovies = moviesArr
+.sort ((a,b)=>{
+  if (a.title > b.title){
+  return 1;
+}else if (a.title < b.title){
+  return -1; 
+} else {
+  return 0;
+}
+})
+.map(eachMovie => eachMovie.title)
+.slice(0,20);
   return sortedMovies;
 }
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes() {}
+function turnHoursToMinutes(movies) {
+  let calculateHour = hourString.split('h');
+  return Number (calculateHour[0])*60;
+}
+function convertMinutes(minuteString){
+  let calculateMinutes = minuteString.split('min');
+  return Number(calculateMinutes[0]);
+}
+function convertDuration (duration){
+  let timePieces = duration.split(' ');
+
+  let minutes = timePieces.reduce((sum, onePiece)=>{
+    if (onePiece.includes('h')){
+      return sum + convertHours(onePiece);
+    }
+    return sum + convertMinutes (onePiece);
+  }, 0);
+  return minutes;
+}
+let moviesHourToMin = movies.map(function(eachMovie){
+  let fixedMovie =JSON.parse(JSON.stringify(eachMovie))
+  fixedMovie.duration = convertDuration(fixedMovie.duration)
+return fixedMovie
+})
+//return moviesHourToMin
+//}
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg() {}
-
-
+function bestYearAvg(movies) {
+  if (!movies.length) return null; 
+  let masterObject ={};
+  movies.forEach(eachMovie => {
+if(!masterObject[eachMovie.year]){
+  masterObject[eachMovie.year] = [eachMovie];
+}else {
+  masterObject[eachMovie.year].push(eachMovie);
+} 
+  });
+  let highest = 0;
+  let actualYear;
+  for (let Year1 in masterObject){
+    if(ratesAv(masterObject[Year1])> highest){
+      highest = ratesAv(masterObject[Year1]);
+      actualYear = Year1;
+}
+}
+return `The best year was ${actualYear} with an average rate of${highest} `;
+}
 
 // The following is required to make unit tests work.
 /* Environment setup. Do not modify the below code. */
